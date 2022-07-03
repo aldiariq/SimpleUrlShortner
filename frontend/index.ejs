@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <title>Simple URL Shortner</title>
+</head>
+
+<body>
+    <div class="container p-5">
+        <div class="card mx-3 mt-n5 shadow-lg"
+            style="border-radius: 10px; border-left:8px #007bff solid; border-right: none; border-top:none; border-bottom:none">
+            <div class="card-body">
+                <h4 class="card-title mb-3 text-center">Please Input URL</h4>
+                <form action="/" method="post">
+                    <div class="form-floating mb-3">
+                        <div class="input-group mb-3">
+                            <input type="url" name="url" class="form-control" id="url" placeholder="URL Input">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary form-control">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="card mx-3 mt-5 shadow-lg"
+            style="border-radius: 10px; border-left:8px #007bff solid; border-right: none; border-top:none; border-bottom:none">
+            <div class="card-body">
+                <h4 class="card-title mb-3 text-center">Summary</h4>
+                <% if (locals.error) { %>
+                    <h6 class="card-title mb-3 text-danger text-center">
+                        <%= error %>
+                    </h6>
+                    <% } %>
+                        <form>
+                            <div class="row align-items-center mb-3">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <div class="input-group">
+                                            <% if (locals.short_url) { %>
+                                                <input type="text" class="form-control" value="<%= short_url %>"
+                                                    aria-label="URL Output" aria-describedby="button-copyurl"
+                                                    name="outputurl" id="outputurl" disabled>
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="button-copyurl" onclick="copyUrl()">Copy
+                                                    URL</button>
+                                                <% } else { %>
+                                                    <input type="text" class="form-control" value="URL"
+                                                        aria-label="URL Output" aria-describedby="button-copyurl"
+                                                        disabled>
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="button-copyurl">Copy
+                                                        URL</button>
+                                                    <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <% if (locals.short_url) { %>
+                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=<%= short_url %>"
+                                            class="img-fluid">
+                                        <% } else { %>
+                                            <img src="/assets/img/qrcode.png" class="img-fluid">
+                                            <% } %>
+                                </div>
+                            </div>
+                            <button onClick="location.href=location.href"
+                                class="btn btn-primary form-control">Refresh</button>
+                        </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalcopyUrl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalcopyUrlLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalcopyUrlLabel">Copy URL</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Copied the url : <%= locals.short_url %>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        function copyUrl() {
+            var copyText = document.getElementById("outputurl");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            $('#modalcopyUrl').modal('show');
+        }
+    </script>
+</body>
+
+</html>
